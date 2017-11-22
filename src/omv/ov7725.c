@@ -235,6 +235,8 @@ static int set_framesize(sensor_t *sensor, framesize_t framesize)
     int ret=0;
     uint16_t w = resolution[framesize][0];
     uint16_t h = resolution[framesize][1];
+    uint16_t x = sensor->hstart;
+    uint16_t y = sensor->vstart;
 
     // Write MSBs
     ret |= cambus_writeb(sensor->slv_addr, HOUTSIZE, w>>2);
@@ -251,11 +253,14 @@ static int set_framesize(sensor_t *sensor, framesize_t framesize)
         ret |= cambus_writeb(sensor->slv_addr, COM7, reg);
 
         // Set QVGA Window Size
-        ret |= cambus_writeb(sensor->slv_addr, HSTART, 0x3F);
-        ret |= cambus_writeb(sensor->slv_addr, HSIZE,  0x50);
-        ret |= cambus_writeb(sensor->slv_addr, VSTART, 0x03);
-        ret |= cambus_writeb(sensor->slv_addr, VSIZE,  0x78);
-        ret |= cambus_writeb(sensor->slv_addr, HREF,   0x00);
+        x = x + 0xFC;
+        y = y + 0x06;
+        ret |= cambus_writeb(sensor->slv_addr, HSTART, x>>2);
+        ret |= cambus_writeb(sensor->slv_addr, HSIZE,  w>>2);
+        ret |= cambus_writeb(sensor->slv_addr, VSTART, y>>1);
+        ret |= cambus_writeb(sensor->slv_addr, VSIZE,  h>>1);
+        ret |= cambus_writeb(sensor->slv_addr, HREF,   ((0x03&x) << 4) |
+                             (0x03&w) | ((0x01&y) << 6) | ((0x01&h) << 2));
 
         // Enable auto-scaling/zooming factors
         ret |= cambus_writeb(sensor->slv_addr, DSPAUTO, 0xFF);
@@ -267,11 +272,14 @@ static int set_framesize(sensor_t *sensor, framesize_t framesize)
         ret |= cambus_writeb(sensor->slv_addr, COM7, reg);
 
         // Set VGA Window Size
-        ret |= cambus_writeb(sensor->slv_addr, HSTART, 0x23);
-        ret |= cambus_writeb(sensor->slv_addr, HSIZE,  0xA0);
-        ret |= cambus_writeb(sensor->slv_addr, VSTART, 0x07);
-        ret |= cambus_writeb(sensor->slv_addr, VSIZE,  0xF0);
-        ret |= cambus_writeb(sensor->slv_addr, HREF,   0x00);
+        x = x + 0x83;
+        y = y + 0x0E;
+        ret |= cambus_writeb(sensor->slv_addr, HSTART, x>>2);
+        ret |= cambus_writeb(sensor->slv_addr, HSIZE,  w>>2);
+        ret |= cambus_writeb(sensor->slv_addr, VSTART, y>>1);
+        ret |= cambus_writeb(sensor->slv_addr, VSIZE,  h>>1);
+        ret |= cambus_writeb(sensor->slv_addr, HREF,   ((0x03&x) << 4) |
+                             (0x03&w) | ((0x01&y) << 6) | ((0x01&h) << 2));
 
         // Disable auto-scaling/zooming factors
         ret |= cambus_writeb(sensor->slv_addr, DSPAUTO, 0xF3);
@@ -481,6 +489,9 @@ int ov7725_init(sensor_t *sensor)
     sensor->set_vflip           = set_vflip;
     sensor->set_special_effect  = set_special_effect;
     sensor->set_lens_correction = set_lens_correction;
+    sensor->hstart = 0;
+    sensor->vstart = 0;
+
 
     // Set sensor flags
     SENSOR_HW_FLAGS_SET(sensor, SENSOR_HW_FLAGS_VSYNC, 1);

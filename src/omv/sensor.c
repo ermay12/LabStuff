@@ -58,6 +58,7 @@ const int resolution[][2] = {
     {800,  600 },    /* SVGA      */
     {1280, 1024},    /* SXGA      */
     {1600, 1200},    /* UXGA      */
+    {50,  240}      /*custom w&h */
 };
 
 #if (OMV_XCLK_SOURCE == OMV_XCLK_TIM)
@@ -454,10 +455,15 @@ int sensor_set_framerate(framerate_t framerate)
 
 int sensor_set_windowing(int x, int y, int w, int h)
 {
+    sensor.hstart = x;
+    sensor.vstart = y;
+    sensor_set_framesize(FRAMESIZE_CUSTOM_VGA);
+    /*
     MAIN_FB()->w = w;
     MAIN_FB()->h = h;
     HAL_DCMI_ConfigCROP(&DCMIHandle, x*2, y, w*2-1, h-1);
     HAL_DCMI_EnableCROP(&DCMIHandle);
+    */
     return 0;
 }
 

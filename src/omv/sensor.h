@@ -118,6 +118,8 @@ typedef struct _sensor {
     sde_t sde;                  // Special digital effects
     pixformat_t pixformat;      // Pixel format
     framesize_t framesize;      // Frame size
+    uint16_t    hstart;         // Start x for ROI
+    uint16_t    vstart;         // Start y for ROI
     framerate_t framerate;      // Frame rate
     gainceiling_t gainceiling;  // AGC gainceiling
 
