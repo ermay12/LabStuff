@@ -61,6 +61,7 @@ const int resolution[][2] = {
     {50,  240}      /*custom w&h */
 };
 
+
 #if (OMV_XCLK_SOURCE == OMV_XCLK_TIM)
 static int extclk_config(int frequency)
 {
