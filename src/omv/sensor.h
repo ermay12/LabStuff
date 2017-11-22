@@ -50,6 +50,7 @@ typedef enum {
     FRAMESIZE_SVGA,     // 800x600
     FRAMESIZE_SXGA,     // 1280x1024
     FRAMESIZE_UXGA,     // 1600x1200
+    FRAMESIZE_CUSTOM_VGA// xxy
 } framesize_t;
 
 typedef enum {
