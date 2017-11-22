@@ -53,6 +53,7 @@ typedef enum {
     FRAMESIZE_CUSTOM_VGA// xxy
 } framesize_t;
 
+
 typedef enum {
     FRAMERATE_2FPS =0x9F,
     FRAMERATE_8FPS =0x87,

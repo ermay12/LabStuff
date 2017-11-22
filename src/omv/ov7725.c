@@ -238,6 +238,7 @@ static int set_framesize(sensor_t *sensor, framesize_t framesize)
     uint16_t x = sensor->hstart;
     uint16_t y = sensor->vstart;
 
+
     // Write MSBs
     ret |= cambus_writeb(sensor->slv_addr, HOUTSIZE, w>>2);
     ret |= cambus_writeb(sensor->slv_addr, VOUTSIZE, h>>1);
